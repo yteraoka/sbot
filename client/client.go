@@ -85,11 +85,17 @@ type APIResponseBody struct {
 
 // Device represents a single device.
 type Device struct {
-	ID          string `json:"deviceId"`
-	Name        string `json:"deviceName"`
-	Type        string `json:"deviceType"`
+	ID           string `json:"deviceId"`
+	Name         string `json:"deviceName"`
+	Type         string `json:"deviceType"`
 	CloudService bool   `json:"enableCloudService"`
-	HubDeviceID string `json:"hubDeviceId"`
+	HubDeviceID  string `json:"hubDeviceId"`
+}
+
+// Scene represents a single scene.
+type Scene struct {
+	ID   string `json:"sceneId"`
+	Name string `json:"sceneName"`
 }
 
 // ListDevicesResponse is the response body for the list devices endpoint.
@@ -131,6 +137,75 @@ func (c *Client) ListDevices() (*ListDevicesResponse, error) {
 	}
 
 	return &listResp, nil
+}
+
+// ListScenes fetches the list of scenes.
+func (c *Client) ListScenes() ([]Scene, error) {
+	req, err := c.newRequest("GET", "/v1.1/scenes", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		return nil, fmt.Errorf("failed to parse API response: %w", err)
+	}
+
+	if apiResp.StatusCode != 100 {
+		return nil, fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	var scenes []Scene
+	if err := json.Unmarshal(apiResp.Body, &scenes); err != nil {
+		return nil, fmt.Errorf("failed to parse scene list: %w", err)
+	}
+
+	return scenes, nil
+}
+
+// ExecuteScene executes a specific scene.
+func (c *Client) ExecuteScene(sceneID string) error {
+	path := fmt.Sprintf("/v1.1/scenes/%s/execute", sceneID)
+	req, err := c.newRequest("POST", path, nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		}
+		return fmt.Errorf("failed to parse API response: %w. Response: %s", err, string(respBody))
+	}
+
+	if apiResp.StatusCode != 100 {
+		return fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	return nil
 }
 
 // GetDeviceStatus fetches the status of a specific device.
@@ -252,4 +327,38 @@ func (c *Client) GetDeviceID(nameOrID string) (string, error) {
 	}
 
 	return "", fmt.Errorf("no device found with name or ID '%s'", nameOrID)
+}
+
+// GetSceneID resolves a scene name or ID to a scene ID.
+func (c *Client) GetSceneID(nameOrID string) (string, error) {
+	scenes, err := c.ListScenes()
+	if err != nil {
+		return "", fmt.Errorf("could not list scenes to find ID: %w", err)
+	}
+
+	// First pass: check for exact ID match
+	for _, scene := range scenes {
+		if scene.ID == nameOrID {
+			return scene.ID, nil
+		}
+	}
+
+	// Second pass: check for name match
+	var foundSceneID string
+	var foundCount int
+	for _, scene := range scenes {
+		if scene.Name == nameOrID {
+			foundSceneID = scene.ID
+			foundCount++
+		}
+	}
+
+	if foundCount == 1 {
+		return foundSceneID, nil
+	}
+	if foundCount > 1 {
+		return "", fmt.Errorf("multiple scenes found with name '%s', please use scene ID instead", nameOrID)
+	}
+
+	return "", fmt.Errorf("no scene found with name or ID '%s'", nameOrID)
 }

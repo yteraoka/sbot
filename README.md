@@ -25,7 +25,9 @@ You can obtain these from the SwitchBot app.
 
 ## Usage
 
-### `list`
+### Devices
+
+#### `list`
 
 List all registered devices.
 
@@ -33,7 +35,7 @@ List all registered devices.
 sbot list
 ```
 
-### `describe [DEVICE_ID]`
+#### `describe [DEVICE_ID]`
 
 Shows details for a specific device in JSON format.
 
@@ -41,7 +43,7 @@ Shows details for a specific device in JSON format.
 sbot describe <device-id>
 ```
 
-### `on [DEVICE_NAME_OR_ID]`
+#### `on [DEVICE_NAME_OR_ID]`
 
 Turns a device on. You can specify the device by its name or ID.
 
@@ -49,7 +51,7 @@ Turns a device on. You can specify the device by its name or ID.
 sbot on "Bedroom Bot"
 ```
 
-### `off [DEVICE_NAME_OR_ID]`
+#### `off [DEVICE_NAME_OR_ID]`
 
 Turns a device off. You can specify the device by its name or ID.
 
@@ -57,12 +59,40 @@ Turns a device off. You can specify the device by its name or ID.
 sbot off "Bedroom Bot"
 ```
 
-### `brightness [DEVICE_NAME_OR_ID] [LEVEL]`
+#### `brightness [DEVICE_NAME_OR_ID] [LEVEL]`
 
 Sets the brightness for a light device (e.g., Color Bulb). `LEVEL` must be an integer between 1 and 100.
 
 ```bash
 sbot brightness "My Bulb" 75
+```
+
+### Color Bulb
+
+#### `bulb set colortemperature [DEVICE_NAME_OR_ID] [KELVIN]`
+
+Sets the color temperature for a Color Bulb. `KELVIN` must be an integer between 2700 and 6500.
+
+```bash
+sbot bulb set colortemperature "My Bulb" 4000
+```
+
+### Scenes
+
+#### `scene list`
+
+List all registered scenes.
+
+```bash
+sbot scene list
+```
+
+#### `scene exec [SCENE_NAME_OR_ID]`
+
+Executes a specific scene.
+
+```bash
+sbot scene exec "Movie Time"
 ```
 
 ## Shell Completion
