@@ -20,6 +20,6 @@ jobs:
           go-version-file: 'mise.toml'
           cache: false
       - name: Set up mise
-        uses: jdx/setup-mise@v2
+        uses: jdx/mise-action@v2
       - name: Run golangci-lint
         run: golangci-lint run
