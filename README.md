@@ -25,7 +25,7 @@ You can obtain these from the SwitchBot app.
 
 ## Usage
 
-### Devices
+### Generic Device Commands
 
 #### `list`
 
@@ -59,15 +59,15 @@ Turns a device off. You can specify the device by its name or ID.
 sbot off "Bedroom Bot"
 ```
 
-#### `brightness [DEVICE_NAME_OR_ID] [LEVEL]`
+### Color Bulb Commands
 
-Sets the brightness for a light device (e.g., Color Bulb). `LEVEL` must be an integer between 1 and 100.
+#### `bulb set brightness [DEVICE_NAME_OR_ID] [LEVEL]`
+
+Sets the brightness for a Color Bulb. `LEVEL` must be an integer between 1 and 100.
 
 ```bash
-sbot brightness "My Bulb" 75
+sbot bulb set brightness "My Bulb" 75
 ```
-
-### Color Bulb
 
 #### `bulb set colortemperature [DEVICE_NAME_OR_ID] [KELVIN]`
 
@@ -77,7 +77,7 @@ Sets the color temperature for a Color Bulb. `KELVIN` must be an integer between
 sbot bulb set colortemperature "My Bulb" 4000
 ```
 
-### Scenes
+### Scene Commands
 
 #### `scene list`
 

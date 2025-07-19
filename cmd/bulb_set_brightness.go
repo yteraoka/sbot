@@ -12,11 +12,11 @@ import (
 	"github.com/yteraoka/sbot/client"
 )
 
-// brightnessCmd represents the brightness command
-var brightnessCmd = &cobra.Command{
+// bulbSetBrightnessCmd represents the brightness command
+var bulbSetBrightnessCmd = &cobra.Command{
 	Use:   "brightness [DEVICE_NAME_OR_ID] [LEVEL]",
-	Short: "Set the brightness of a light device",
-	Long:  `Sets the brightness for a light device (e.g., Color Bulb). LEVEL must be an integer between 1 and 100.`,
+	Short: "Set the brightness of a Color Bulb",
+	Long:  `Sets the brightness for a Color Bulb. LEVEL must be an integer between 1 and 100.`,
 	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := os.Getenv("SWITCHBOT_TOKEN")
@@ -54,5 +54,5 @@ var brightnessCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(brightnessCmd)
+	bulbSetCmd.AddCommand(bulbSetBrightnessCmd)
 }
