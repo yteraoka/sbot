@@ -21,10 +21,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Extract Go version
+        id: go-version
+        run: echo "version=$(grep 'go = ' mise.toml | cut -d '"' -f 2)" >> $GITHUB_OUTPUT
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'mise.toml'
+          go-version: ${{ steps.go-version.outputs.version }}
           cache: true
 
       - name: Run GoReleaser build check (Pull Request)
