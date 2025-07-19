@@ -33,20 +33,12 @@ List all registered devices.
 sbot list
 ```
 
-**Example Output:**
-
-```
-Devices:
-ID: 01-202304011234-12345678, Name: Living Room Hub, Type: Hub Mini
-ID: 02-202304012345-23456789, Name: Bedroom Bot, Type: Bot
-```
-
 ### `describe [DEVICE_ID]`
 
 Shows details for a specific device in JSON format.
 
 ```bash
-sbot describe 02-202304012345-23456789
+sbot describe <device-id>
 ```
 
 ### `on [DEVICE_NAME_OR_ID]`
@@ -54,11 +46,7 @@ sbot describe 02-202304012345-23456789
 Turns a device on. You can specify the device by its name or ID.
 
 ```bash
-# By name
 sbot on "Bedroom Bot"
-
-# By ID
-sbot on 02-202304012345-23456789
 ```
 
 ### `off [DEVICE_NAME_OR_ID]`
@@ -66,11 +54,15 @@ sbot on 02-202304012345-23456789
 Turns a device off. You can specify the device by its name or ID.
 
 ```bash
-# By name
 sbot off "Bedroom Bot"
+```
 
-# By ID
-sbot off 02-202304012345-23456789
+### `brightness [DEVICE_NAME_OR_ID] [LEVEL]`
+
+Sets the brightness for a light device (e.g., Color Bulb). `LEVEL` must be an integer between 1 and 100.
+
+```bash
+sbot brightness "My Bulb" 75
 ```
 
 ## Shell Completion
