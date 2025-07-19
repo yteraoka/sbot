@@ -73,6 +73,26 @@ sbot off "Bedroom Bot"
 sbot off 02-202304012345-23456789
 ```
 
+## Shell Completion
+
+`sbot` supports generating shell completion scripts for Bash and Zsh.
+
+### `completion [bash|zsh]`
+
+Generates the completion script. Follow the instructions printed by the command to install it.
+
+**Example for Bash:**
+
+```bash
+source <(sbot completion bash)
+```
+
+**Example for Zsh:**
+
+```bash
+sbot completion zsh > "${fpath[1]}/_sbot"
+```
+
 ## License
 
 This project is licensed under the terms of the LICENSE file.
