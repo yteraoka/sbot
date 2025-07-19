@@ -33,11 +33,11 @@ jobs:
 
       - name: Run GoReleaser release (Tag Push)
         if: startsWith(github.ref, 'refs/tags/')
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
-          # 'distribution: goreleaser' is required for the action to use the
+          # 'distribution: binary' is required for the action to use the
           # GoReleaser binary installed by a previous step (e.g., mise).
-          distribution: goreleaser
+          distribution: binary
           # The version will be determined by the git tag.
           args: release --clean
         env:
