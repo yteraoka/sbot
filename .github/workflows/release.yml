@@ -37,7 +37,7 @@ jobs:
         with:
           # 'distribution: binary' is required for the action to use the
           # GoReleaser binary installed by a previous step (e.g., mise).
-          distribution: binary
+          distribution: goreleaser
           # The version will be determined by the git tag.
           args: release --clean
         env:
