@@ -9,8 +9,8 @@ on:
       - 'v*'
 
 permissions:
-  contents: write # to create releases
-  pull-requests: read # to read PR metadata
+  contents: write
+  pull-requests: read
 
 jobs:
   goreleaser:
@@ -19,26 +19,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # This is required for GoReleaser to fetch all tags and generate a changelog
           fetch-depth: 0
 
-      - name: Set up mise
-        uses: jdx/mise-action@v2
+      - name: Extract Go version
+        id: go-version
+        run: echo "version=$(grep 'go = ' mise.toml | cut -d '"' -f 2)" >> $GITHUB_OUTPUT
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ steps.go-version.outputs.version }}
+          cache: true
 
       - name: Run GoReleaser build check (Pull Request)
         if: github.event_name == 'pull_request'
-        run: goreleaser build --snapshot --clean
-        # The 'build' command only builds the binaries and archives,
-        # but does not release them. '--snapshot' is used for test runs.
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: v2
+          args: build --snapshot --clean
 
       - name: Run GoReleaser release (Tag Push)
         if: startsWith(github.ref, 'refs/tags/')
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
-          # 'distribution: goreleaser' is required for the action to use the
-          # GoReleaser binary installed by a previous step (e.g., mise).
-          distribution: goreleaser
-          # The version will be determined by the git tag.
+          version: v2
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
