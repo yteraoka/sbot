@@ -77,6 +77,48 @@ Sets the color temperature for a Color Bulb. `KELVIN` must be an integer between
 sbot bulb set colortemperature "My Bulb" 4000
 ```
 
+### TV Commands
+
+#### `tv set-channel [DEVICE_NAME_OR_ID] [CHANNEL]`
+
+Sets the channel for a TV.
+
+```bash
+sbot tv set-channel "Living Room TV" 5
+```
+
+#### `tv volume-up [DEVICE_NAME_OR_ID]`
+
+Increases the volume of a TV.
+
+```bash
+sbot tv volume-up "Living Room TV"
+```
+
+#### `tv volume-down [DEVICE_NAME_OR_ID]`
+
+Decreases the volume of a TV.
+
+```bash
+sbot tv volume-down "Living Room TV"
+```
+
+#### `tv channel-up [DEVICE_NAME_OR_ID]`
+
+Changes to the next channel.
+
+```bash
+sbot tv channel-up "Living Room TV"
+```
+
+#### `tv channel-down [DEVICE_NAME_OR_ID]`
+
+Changes to the previous channel.
+
+```bash
+sbot tv channel-down "Living Room TV"
+```
+
 ### Scene Commands
 
 #### `scene list`
