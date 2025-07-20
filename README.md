@@ -59,6 +59,14 @@ Turns a device off. You can specify the device by its name or ID.
 sbot off "Bedroom Bot"
 ```
 
+#### `run-customize [DEVICE_NAME_OR_ID] [BUTTON_NAME]`
+
+Executes a custom button on an infrared remote.
+
+```bash
+sbot run-customize "Living Room TV" "Menu"
+```
+
 ### Color Bulb Commands
 
 #### `bulb set brightness [DEVICE_NAME_OR_ID] [LEVEL]`
