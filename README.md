@@ -159,12 +159,12 @@ List all registered scenes.
 sbot scene list
 ```
 
-#### `scene exec [SCENE_NAME_OR_ID]`
+#### `scene run [SCENE_NAME_OR_ID]`
 
-Executes a specific scene.
+Runs a specific scene.
 
 ```bash
-sbot scene exec "Movie Time"
+sbot scene run "Movie Time"
 ```
 
 ## Shell Completion
