@@ -11,11 +11,11 @@ import (
 	"github.com/yteraoka/sbot/client"
 )
 
-// sceneExecCmd represents the exec command
-var sceneExecCmd = &cobra.Command{
-	Use:   "exec [SCENE_NAME_OR_ID]",
-	Short: "Execute a scene",
-	Long:  `Executes a specific scene, specified by its name or ID.`,
+// sceneRunCmd represents the run command
+var sceneRunCmd = &cobra.Command{
+	Use:   "run [SCENE_NAME_OR_ID]",
+	Short: "Run a scene",
+	Long:  `Runs a specific scene, specified by its name or ID.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := os.Getenv("SWITCHBOT_TOKEN")
@@ -43,5 +43,5 @@ var sceneExecCmd = &cobra.Command{
 }
 
 func init() {
-	sceneCmd.AddCommand(sceneExecCmd)
+	sceneCmd.AddCommand(sceneRunCmd)
 }
