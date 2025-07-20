@@ -291,6 +291,51 @@ func (c *Client) SendCommand(deviceID, command, parameter string) error {
 	return nil
 }
 
+// SendCustomizeCommand sends a customize command to a specific device.
+func (c *Client) SendCustomizeCommand(deviceID, buttonName string) error {
+	path := fmt.Sprintf("/v1.1/devices/%s/commands", deviceID)
+	cmdBody := &CommandRequestBody{
+		Command:     buttonName,
+		Parameter:   "default",
+		CommandType: "customize",
+	}
+
+	jsonBody, err := json.Marshal(cmdBody)
+	if err != nil {
+		return err
+	}
+
+	req, err := c.newRequest("POST", path, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close() //nolint:errcheck
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		}
+		return fmt.Errorf("failed to parse API response: %w. Response: %s", err, string(respBody))
+	}
+
+	if apiResp.StatusCode != 100 {
+		return fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	return nil
+}
+
 // GetDeviceID resolves a device name or ID to a device ID.
 // It first tries to match by ID, then by name.
 // If a name matches multiple devices, an error is returned.
