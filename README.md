@@ -119,6 +119,28 @@ Changes to the previous channel.
 sbot tv channel-down "Living Room TV"
 ```
 
+### Air Conditioner Commands
+
+#### `ac on [DEVICE_NAME_OR_ID] --temperature [TEMP] --mode [MODE] --fan-speed [SPEED]`
+
+Turns on an Air Conditioner with specified settings. Temperature is required.
+
+*   `--temperature`, `-t`: Temperature in Celsius.
+*   `--mode`, `-m`: `auto`, `cool`, `dry`, `fan`, `heat` (default: `auto`).
+*   `--fan-speed`, `-f`: `auto`, `low`, `medium`, `high` (default: `auto`).
+
+```bash
+sbot ac on "Bedroom AC" -t 25 --mode cool --fan-speed medium
+```
+
+#### `ac off [DEVICE_NAME_OR_ID]`
+
+Turns off an Air Conditioner.
+
+```bash
+sbot ac off "Bedroom AC"
+```
+
 ### Scene Commands
 
 #### `scene list`
