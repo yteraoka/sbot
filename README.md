@@ -167,6 +167,32 @@ Runs a specific scene.
 sbot scene run "Movie Time"
 ```
 
+### Webhook Commands
+
+#### `webhook create [URL]`
+
+Creates a webhook.
+
+```bash
+sbot webhook create "https://example.com/webhook"
+```
+
+#### `webhook update [URL]`
+
+Updates a webhook.
+
+```bash
+sbot webhook update "https://new.example.com/webhook"
+```
+
+#### `webhook delete`
+
+Deletes a webhook.
+
+```bash
+sbot webhook delete
+```
+
 ## Shell Completion
 
 `sbot` supports generating shell completion scripts for Bash and Zsh.
