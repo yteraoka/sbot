@@ -336,6 +336,89 @@ func (c *Client) SendCustomizeCommand(deviceID, buttonName string) error {
 	return nil
 }
 
+// WebhookSetupPayload is the payload for setting up a webhook.
+type WebhookSetupPayload struct {
+	URL string `json:"url"`
+}
+
+// SetupWebhook sets up a webhook for the SwitchBot API.
+func (c *Client) SetupWebhook(webhookURL string) error {
+	path := "/v1.1/webhook/setupWebhook"
+	payload := WebhookSetupPayload{
+		URL: webhookURL,
+	}
+
+	jsonBody, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	req, err := c.newRequest("POST", path, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close() //nolint:errcheck
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		}
+		return fmt.Errorf("failed to parse API response: %w. Response: %s", err, string(respBody))
+	}
+
+	if apiResp.StatusCode != 100 {
+		return fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	return nil
+}
+
+// DeleteWebhook deletes the webhook for the SwitchBot API.
+func (c *Client) DeleteWebhook() error {
+	path := "/v1.1/webhook/deleteWebhook"
+
+	req, err := c.newRequest("POST", path, nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close() //nolint:errcheck
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		}
+		return fmt.Errorf("failed to parse API response: %w. Response: %s", err, string(respBody))
+	}
+
+	if apiResp.StatusCode != 100 {
+		return fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	return nil
+}
+
 // GetDeviceID resolves a device name or ID to a device ID.
 // It first tries to match by ID, then by name.
 // If a name matches multiple devices, an error is returned.
