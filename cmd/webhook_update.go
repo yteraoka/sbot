@@ -11,6 +11,8 @@ import (
 	"github.com/yteraoka/sbot/client"
 )
 
+var enable bool
+
 // webhookUpdateCmd represents the update command
 var webhookUpdateCmd = &cobra.Command{
 	Use:   "update [URL]",
@@ -28,7 +30,7 @@ var webhookUpdateCmd = &cobra.Command{
 
 		c := client.NewClient(token, secret)
 
-		err := c.SetupWebhook(webhookURL)
+		err := c.UpdateWebhook(webhookURL, enable)
 		if err != nil {
 			return err
 		}
@@ -40,4 +42,5 @@ var webhookUpdateCmd = &cobra.Command{
 
 func init() {
 	webhookCmd.AddCommand(webhookUpdateCmd)
+	webhookUpdateCmd.Flags().BoolVar(&enable, "enable", true, "Enable or disable the webhook")
 }

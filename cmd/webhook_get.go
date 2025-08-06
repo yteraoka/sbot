@@ -11,12 +11,11 @@ import (
 	"github.com/yteraoka/sbot/client"
 )
 
-// webhookDeleteCmd represents the delete command
-var webhookDeleteCmd = &cobra.Command{
-	Use:   "delete [URL]",
-	Short: "Delete a webhook",
-	Long:  `Deletes the webhook for your SwitchBot account.`,
-	Args:  cobra.ExactArgs(1),
+// webhookGetCmd represents the get command
+var webhookGetCmd = &cobra.Command{
+	Use:   "get",
+	Short: "Get the webhook URL",
+	Long:  `Gets the webhook URL for your SwitchBot account.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := os.Getenv("SWITCHBOT_TOKEN")
 		secret := os.Getenv("SWITCHBOT_CLIENT_SECRET")
@@ -24,20 +23,18 @@ var webhookDeleteCmd = &cobra.Command{
 			return fmt.Errorf("SWITCHBOT_TOKEN and SWITCHBOT_CLIENT_SECRET must be set")
 		}
 
-		webhookURL := args[0]
-
 		c := client.NewClient(token, secret)
 
-		err := c.DeleteWebhook(webhookURL)
+		webhookURL, err := c.GetWebhook()
 		if err != nil {
 			return err
 		}
 
-		fmt.Println("Successfully deleted webhook.")
+		fmt.Println(webhookURL)
 		return nil
 	},
 }
 
 func init() {
-	webhookCmd.AddCommand(webhookDeleteCmd)
+	webhookCmd.AddCommand(webhookGetCmd)
 }

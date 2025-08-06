@@ -338,14 +338,18 @@ func (c *Client) SendCustomizeCommand(deviceID, buttonName string) error {
 
 // WebhookSetupPayload is the payload for setting up a webhook.
 type WebhookSetupPayload struct {
-	URL string `json:"url"`
+	Action     string `json:"action"`
+	URL        string `json:"url"`
+	DeviceList string `json:"deviceList"`
 }
 
 // SetupWebhook sets up a webhook for the SwitchBot API.
 func (c *Client) SetupWebhook(webhookURL string) error {
 	path := "/v1.1/webhook/setupWebhook"
 	payload := WebhookSetupPayload{
-		URL: webhookURL,
+		Action:     "setupWebhook",
+		URL:        webhookURL,
+		DeviceList: "ALL",
 	}
 
 	jsonBody, err := json.Marshal(payload)
@@ -384,11 +388,26 @@ func (c *Client) SetupWebhook(webhookURL string) error {
 	return nil
 }
 
-// DeleteWebhook deletes the webhook for the SwitchBot API.
-func (c *Client) DeleteWebhook() error {
-	path := "/v1.1/webhook/deleteWebhook"
+// WebhookDeletePayload is the payload for deleting a webhook.
+type WebhookDeletePayload struct {
+	Action string `json:"action"`
+	URL    string `json:"url"`
+}
 
-	req, err := c.newRequest("POST", path, nil)
+// DeleteWebhook deletes the webhook for the SwitchBot API.
+func (c *Client) DeleteWebhook(webhookURL string) error {
+	path := "/v1.1/webhook/deleteWebhook"
+	payload := WebhookDeletePayload{
+		Action: "deleteWebhook",
+		URL:    webhookURL,
+	}
+
+	jsonBody, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	req, err := c.newRequest("POST", path, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return err
 	}
@@ -417,6 +436,125 @@ func (c *Client) DeleteWebhook() error {
 	}
 
 	return nil
+}
+
+// WebhookUpdatePayload is the payload for updating a webhook.
+type WebhookUpdatePayload struct {
+	Action string              `json:"action"`
+	Config WebhookUpdateConfig `json:"config"`
+}
+
+// WebhookUpdateConfig is the config for updating a webhook.
+type WebhookUpdateConfig struct {
+	URL    string `json:"url"`
+	Enable bool   `json:"enable"`
+}
+
+// UpdateWebhook updates a webhook for the SwitchBot API.
+func (c *Client) UpdateWebhook(webhookURL string, enable bool) error {
+	path := "/v1.1/webhook/updateWebhook"
+	payload := WebhookUpdatePayload{
+		Action: "updateWebhook",
+		Config: WebhookUpdateConfig{
+			URL:    webhookURL,
+			Enable: enable,
+		},
+	}
+
+	jsonBody, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	req, err := c.newRequest("POST", path, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close() //nolint:errcheck
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			return nil
+		}
+		return fmt.Errorf("failed to parse API response: %w. Response: %s", err, string(respBody))
+	}
+
+	if apiResp.StatusCode != 100 {
+		return fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	return nil
+}
+
+// WebhookGetPayload is the payload for getting a webhook.
+type WebhookGetPayload struct {
+	Action string `json:"action"`
+}
+
+// WebhookGetResponse is the response for getting a webhook.
+type WebhookGetResponse struct {
+	Action string   `json:"action"`
+	URLs   []string `json:"urls"`
+}
+
+// GetWebhook gets a webhook for the SwitchBot API.
+func (c *Client) GetWebhook() (string, error) {
+	path := "/v1.1/webhook/queryWebhook"
+	payload := WebhookGetPayload{
+		Action: "queryUrl",
+	}
+
+	jsonBody, err := json.Marshal(payload)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	req, err := c.newRequest("POST", path, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close() //nolint:errcheck
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var apiResp APIResponseBody
+	if err := json.Unmarshal(respBody, &apiResp); err != nil {
+		return "", fmt.Errorf("failed to parse API response: %w", err)
+	}
+
+	if apiResp.StatusCode != 100 {
+		return "", fmt.Errorf("API error: %s (status code: %d)", apiResp.Message, apiResp.StatusCode)
+	}
+
+	var webhookResp WebhookGetResponse
+	if err := json.Unmarshal(apiResp.Body, &webhookResp); err != nil {
+		return "", fmt.Errorf("failed to parse webhook response: %w", err)
+	}
+
+	if len(webhookResp.URLs) == 0 {
+		return "", fmt.Errorf("no webhook URL found")
+	}
+
+	return webhookResp.URLs[0], nil
 }
 
 // GetDeviceID resolves a device name or ID to a device ID.
