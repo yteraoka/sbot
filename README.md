@@ -14,6 +14,14 @@ First, ensure you have Go installed on your system. You can then install `sbot` 
 go install github.com/yteraoka/sbot@latest
 ```
 
+Alternatively, you can build from source for local development:
+
+```bash
+goreleaser build --clean --snapshot
+```
+
+This will create a distributable binary in the `dist` directory.
+
 ## Configuration
 
 To use `sbot`, you need to provide your SwitchBot API credentials via environment variables.
