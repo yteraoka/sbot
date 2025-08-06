@@ -47,4 +47,3 @@ var tvSetChannelCmd = &cobra.Command{
 func init() {
 	tvCmd.AddCommand(tvSetChannelCmd)
 }
-

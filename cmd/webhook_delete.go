@@ -11,12 +11,12 @@ import (
 	"github.com/yteraoka/sbot/client"
 )
 
-// tvVolumeDownCmd represents the volume-down command
-var tvVolumeDownCmd = &cobra.Command{
-	Use:   "volume-down [DEVICE_NAME_OR_ID]",
-	Short: "Decrease the volume of a TV",
-	Long:  `Decreases the volume of a TV by one step.`,
-	Args:  cobra.ExactArgs(1),
+// webhookDeleteCmd represents the delete command
+var webhookDeleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete a webhook",
+	Long:  `Deletes the webhook for your SwitchBot account.`,
+	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		token := os.Getenv("SWITCHBOT_TOKEN")
 		secret := os.Getenv("SWITCHBOT_CLIENT_SECRET")
@@ -24,25 +24,18 @@ var tvVolumeDownCmd = &cobra.Command{
 			return fmt.Errorf("SWITCHBOT_TOKEN and SWITCHBOT_CLIENT_SECRET must be set")
 		}
 
-		nameOrID := args[0]
-
 		c := client.NewClient(token, secret)
 
-		deviceID, err := c.GetDeviceID(nameOrID)
+		err := c.DeleteWebhook()
 		if err != nil {
 			return err
 		}
 
-		err = c.SendCommand(deviceID, "volumeSub", "default")
-		if err != nil {
-			return err
-		}
-
-		fmt.Printf("Decreased volume of %s (%s).\n", nameOrID, deviceID)
+		fmt.Println("Successfully deleted webhook.")
 		return nil
 	},
 }
 
 func init() {
-	tvCmd.AddCommand(tvVolumeDownCmd)
+	webhookCmd.AddCommand(webhookDeleteCmd)
 }
