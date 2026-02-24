@@ -92,6 +92,14 @@ type Device struct {
 	HubDeviceID  string `json:"hubDeviceId"`
 }
 
+// InfraredRemote represents a single infrared remote device.
+type InfraredRemote struct {
+	ID          string `json:"deviceId"`
+	Name        string `json:"deviceName"`
+	RemoteType  string `json:"remoteType"`
+	HubDeviceID string `json:"hubDeviceId"`
+}
+
 // Scene represents a single scene.
 type Scene struct {
 	ID   string `json:"sceneId"`
@@ -100,8 +108,8 @@ type Scene struct {
 
 // ListDevicesResponse is the response body for the list devices endpoint.
 type ListDevicesResponse struct {
-	DeviceList         []Device `json:"deviceList"`
-	InfraredRemoteList []Device `json:"infraredRemoteList"`
+	DeviceList         []Device         `json:"deviceList"`
+	InfraredRemoteList []InfraredRemote `json:"infraredRemoteList"`
 }
 
 // ListDevices fetches the list of devices.
@@ -566,21 +574,30 @@ func (c *Client) GetDeviceID(nameOrID string) (string, error) {
 		return "", fmt.Errorf("could not list devices to find ID: %w", err)
 	}
 
-	allDevices := append(devices.DeviceList, devices.InfraredRemoteList...)
-
 	// First pass: check for exact ID match
-	for _, device := range allDevices {
+	for _, device := range devices.DeviceList {
 		if device.ID == nameOrID {
 			return device.ID, nil
+		}
+	}
+	for _, remote := range devices.InfraredRemoteList {
+		if remote.ID == nameOrID {
+			return remote.ID, nil
 		}
 	}
 
 	// Second pass: check for name match
 	var foundDeviceID string
 	var foundCount int
-	for _, device := range allDevices {
+	for _, device := range devices.DeviceList {
 		if device.Name == nameOrID {
 			foundDeviceID = device.ID
+			foundCount++
+		}
+	}
+	for _, remote := range devices.InfraredRemoteList {
+		if remote.Name == nameOrID {
+			foundDeviceID = remote.ID
 			foundCount++
 		}
 	}
