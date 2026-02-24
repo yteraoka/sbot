@@ -34,7 +34,7 @@ var listCmd = &cobra.Command{
 		if len(resp.InfraredRemoteList) > 0 {
 			fmt.Println("\nInfrared Remotes:")
 			for _, device := range resp.InfraredRemoteList {
-				fmt.Printf("ID: %s, Name: %s, Type: %s\n", device.ID, device.Name, device.Type)
+				fmt.Printf("ID: %s, Name: %s, Type: %s, HubDeviceID: %s\n", device.ID, device.Name, device.RemoteType, device.HubDeviceID)
 			}
 		}
 
