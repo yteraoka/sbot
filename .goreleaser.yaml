@@ -46,3 +46,8 @@ changelog:
       - "^docs:"
       - "^test:"
       - '^[mM]erge'
+
+brews:
+  - repository:
+      owner: yteraoka
+      name: homebrew-tools
