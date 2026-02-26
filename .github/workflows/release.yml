@@ -41,7 +41,7 @@ jobs:
         uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
         with:
           app-id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
           # 自分のリポジトリと Tap リポジトリの両方に権限を絞る（任意）
           owner: ${{ github.repository_owner }}
           repositories: |
