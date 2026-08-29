@@ -3,5 +3,17 @@
   "extends": [
     "config:recommended"
   ],
-  "minimumReleaseAge": "7 days"
+  "minimumReleaseAge": "7 days",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "automerge": true
+    }
+  ]
 }
