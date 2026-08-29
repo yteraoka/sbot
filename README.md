@@ -8,13 +8,45 @@ This tool allows you to manage and control your SwitchBot devices from the comma
 
 ## Installation
 
+### Homebrew (macOS)
+
+`sbot` is distributed as a cask from the [yteraoka/cask](https://github.com/yteraoka/homebrew-cask) tap:
+
+```bash
+brew install --cask yteraoka/cask/sbot
+```
+
+Or tap the repository first, then install by the short name:
+
+```bash
+brew tap yteraoka/cask
+brew install --cask sbot
+```
+
+To upgrade or uninstall:
+
+```bash
+brew upgrade --cask sbot
+brew uninstall --cask sbot
+```
+
+### go install
+
 First, ensure you have Go installed on your system. You can then install `sbot` using `go install`:
 
 ```bash
 go install github.com/yteraoka/sbot@latest
 ```
 
-Alternatively, you can build from source for local development:
+### Pre-built binaries
+
+Archives for Linux, macOS, and Windows (amd64 and arm64) are attached to every
+[release](https://github.com/yteraoka/sbot/releases). Download the one for your platform, extract it,
+and place the `sbot` binary somewhere on your `PATH`.
+
+### Build from source
+
+For local development you can build with GoReleaser:
 
 ```bash
 goreleaser build --clean --snapshot
