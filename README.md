@@ -221,6 +221,38 @@ source <(sbot completion bash)
 sbot completion zsh > "${fpath[1]}/_sbot"
 ```
 
+## Release
+
+Releases are automated with [tagpr](https://github.com/Songmu/tagpr) and [GoReleaser](https://goreleaser.com/).
+
+1. Merge your pull requests into `main` as usual.
+2. tagpr opens (or updates) a release pull request that bumps the version and updates `CHANGELOG.md`.
+   By default it proposes a patch bump. To release a minor or major version, add the `minor` or
+   `major` label to that pull request.
+3. Merging the release pull request makes tagpr push the corresponding `vX.Y.Z` tag.
+4. The tag push triggers the GoReleaser workflow, which builds the binaries, creates the GitHub
+   Release, and updates the [Homebrew cask](https://github.com/yteraoka/homebrew-cask).
+
+There is no need to create tags by hand.
+
+### Required repository settings
+
+Both workflows authenticate as a GitHub App, because tags pushed with the default `GITHUB_TOKEN`
+do not trigger other workflows.
+
+| Name | Kind | Used by |
+| --- | --- | --- |
+| `TAGPR_APP_ID` | Variable | `tagpr.yml` |
+| `TAGPR_APP_PRIVATE_KEY` | Secret | `tagpr.yml` |
+| `HOMEBREW_APP_ID` | Variable | `release.yml` |
+| `HOMEBREW_APP_PRIVATE_KEY` | Secret | `release.yml` |
+
+The tagpr app needs `Contents: write` and `Pull requests: write` on this repository. The release app
+needs `Contents: write` on this repository and on `homebrew-cask`.
+
+*Allow GitHub Actions to create and approve pull requests* must also be enabled under
+Settings -> Actions.
+
 ## License
 
 This project is licensed under the terms of the LICENSE file.
