@@ -1,5 +1,7 @@
 # sbot
 
+English | [日本語](README.ja.md)
+
 `sbot` is a command-line interface (CLI) tool for interacting with the SwitchBot API.
 
 ## Description
