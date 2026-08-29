@@ -1,5 +1,7 @@
 # sbot
 
+English | [日本語](README.ja.md)
+
 `sbot` is a command-line interface (CLI) tool for interacting with the SwitchBot API.
 
 ## Description
@@ -8,13 +10,45 @@ This tool allows you to manage and control your SwitchBot devices from the comma
 
 ## Installation
 
+### Homebrew (macOS)
+
+`sbot` is distributed as a cask from the [yteraoka/cask](https://github.com/yteraoka/homebrew-cask) tap:
+
+```bash
+brew install --cask yteraoka/cask/sbot
+```
+
+Or tap the repository first, then install by the short name:
+
+```bash
+brew tap yteraoka/cask
+brew install --cask sbot
+```
+
+To upgrade or uninstall:
+
+```bash
+brew upgrade --cask sbot
+brew uninstall --cask sbot
+```
+
+### go install
+
 First, ensure you have Go installed on your system. You can then install `sbot` using `go install`:
 
 ```bash
 go install github.com/yteraoka/sbot@latest
 ```
 
-Alternatively, you can build from source for local development:
+### Pre-built binaries
+
+Archives for Linux, macOS, and Windows (amd64 and arm64) are attached to every
+[release](https://github.com/yteraoka/sbot/releases). Download the one for your platform, extract it,
+and place the `sbot` binary somewhere on your `PATH`.
+
+### Build from source
+
+For local development you can build with GoReleaser:
 
 ```bash
 goreleaser build --clean --snapshot
@@ -220,6 +254,38 @@ source <(sbot completion bash)
 ```bash
 sbot completion zsh > "${fpath[1]}/_sbot"
 ```
+
+## Release
+
+Releases are automated with [tagpr](https://github.com/Songmu/tagpr) and [GoReleaser](https://goreleaser.com/).
+
+1. Merge your pull requests into `main` as usual.
+2. tagpr opens (or updates) a release pull request that bumps the version and updates `CHANGELOG.md`.
+   By default it proposes a patch bump. To release a minor or major version, add the `minor` or
+   `major` label to that pull request.
+3. Merging the release pull request makes tagpr push the corresponding `vX.Y.Z` tag.
+4. The tag push triggers the GoReleaser workflow, which builds the binaries, creates the GitHub
+   Release, and updates the [Homebrew cask](https://github.com/yteraoka/homebrew-cask).
+
+There is no need to create tags by hand.
+
+### Required repository settings
+
+Both workflows authenticate as a GitHub App, because tags pushed with the default `GITHUB_TOKEN`
+do not trigger other workflows.
+
+| Name | Kind | Used by |
+| --- | --- | --- |
+| `TAGPR_APP_ID` | Variable | `tagpr.yml` |
+| `TAGPR_APP_PRIVATE_KEY` | Secret | `tagpr.yml` |
+| `HOMEBREW_APP_ID` | Variable | `release.yml` |
+| `HOMEBREW_APP_PRIVATE_KEY` | Secret | `release.yml` |
+
+The tagpr app needs `Contents: write` and `Pull requests: write` on this repository. The release app
+needs `Contents: write` on this repository and on `homebrew-cask`.
+
+*Allow GitHub Actions to create and approve pull requests* must also be enabled under
+Settings -> Actions.
 
 ## License
 

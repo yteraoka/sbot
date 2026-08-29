@@ -1,0 +1,8 @@
+# tagpr configuration file
+# https://github.com/Songmu/tagpr#configuration-file
+[tagpr]
+	vPrefix = true
+	releaseBranch = main
+	versionFile = -
+	# リリース作成は GoReleaser (release.yml) に任せ、tagpr はタグの push のみ行う
+	release = false
