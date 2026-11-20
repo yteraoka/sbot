@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.0.12](https://github.com/yteraoka/sbot/compare/v0.0.11...v0.0.12) - 2026-11-20
+
+- chore(deps): update jdx/mise-action action to v5.2.2 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/77
+- chore(deps): update songmu/tagpr action to v1.21.4 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/79
+- chore(deps): update jdx/mise-action action to v5.2.3 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/80
+- chore(deps): update jdx/mise-action action to v5.2.7 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/81
+- chore(deps): update songmu/tagpr action to v1.22.0 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/82
+- chore(deps): update dependency go to v1.27.4 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/83
+- chore(deps): update jdx/mise-action action to v5.2.8 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/84
+
 ## [v0.0.11](https://github.com/yteraoka/sbot/compare/v0.0.10...v0.0.11) - 2026-10-27
 
 - chore(deps): update goreleaser/goreleaser-action action to v7.1.0 by @renovate[bot] in https://github.com/yteraoka/sbot/pull/37
